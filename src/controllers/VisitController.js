@@ -210,7 +210,7 @@ module.exports = {
 
         if (oldVisit.custumers.length > 1) {
 
-            newVisit = await Visit.create({ ...newDate });
+            newVisit = await Visit.create({ ...newDate, customers: [{user}] });
 
             for (idxCustomer = 0; idxCustomer < oldVisit.custumers.length; idxCustomer++) {
                 if (oldVisit.custumers[idxCustomer].userId == user._id) {
