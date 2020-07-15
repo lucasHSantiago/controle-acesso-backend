@@ -18,6 +18,12 @@ function dateVerifier(day, month, year) {
 module.exports = {
     async store(req, res) {
         const { day, month, year, hourStart } = req.body;
+
+        let today = new Date();
+
+        if (day < today.getDate() || month < today.getMonth() + 1 || year < today.getFullYear())
+            return res.status(400).send({ error: 'Não pode marcar horário para o dia anterior' });
+
         let mestre = await Mestre.findOne();
 
         if (hourStart < 1 || hourStart > 24 || hourStart < mestre.horarioInicialFuncionamento || hourStart > mestre.horarioFinalFuncionamento)
