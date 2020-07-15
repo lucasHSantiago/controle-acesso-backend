@@ -20,8 +20,14 @@ module.exports = {
         const { day, month, year, hourStart } = req.body;
 
         let today = new Date();
+        
+        if (year < today.getFullYear())
+            return res.status(400).send({ error: 'Não pode marcar horário para o ano anterior' });
 
-        if (day < today.getDate() || month < today.getMonth() + 1 || year < today.getFullYear())
+        if (month < today.getMonth() + 1 && year == today.getFullYear())
+            return res.status(400).send({ error: 'Não pode marcar horário para o mês anterior' });
+
+        if (day < today.getDate() && month == today.getMonth() + 1)
             return res.status(400).send({ error: 'Não pode marcar horário para o dia anterior' });
 
         let mestre = await Mestre.findOne();
@@ -57,7 +63,7 @@ module.exports = {
                 return res.status(409).send({ error: 'Você já tem o limite de visitas para esse dia' });
         }
 
-        let visitsDayBefore = await Visit.find({ day: Number.parseInt(day) - 1, hourEnd: { $gte: hourStart},  'custumers.0.userId': { $lte: userId } });
+        let visitsDayBefore = await Visit.find({ day: Number.parseInt(day) - 1, month: Number.parseInt(month) - 1, year: Number.parseInt(year) - 1, hourEnd: { $gte: hourStart},  'custumers.0.userId': { $lte: userId } });
         if (visitsDayBefore.length)
             return res.status(400).send({ error: 'Você visitou em menos de 24 horas' });
 
