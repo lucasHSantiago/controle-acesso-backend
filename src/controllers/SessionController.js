@@ -11,9 +11,9 @@ module.exports = {
 
         if (user) {
             if (user.cpf == cpf)
-                return res.status(409).send({ error: 'CPF already exist' });
+                return res.status(409).send({ error: 'CPF já cadastrado' });
 
-            return res.status(409).send({ error: 'Email already exist' });
+            return res.status(409).send({ error: 'Email já cadastrado' });
         }
 
         if (!user)
