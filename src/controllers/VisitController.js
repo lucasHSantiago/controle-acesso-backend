@@ -208,6 +208,23 @@ module.exports = {
             return res.json(newVisit);
         } 
 
+        if (oldVisit.custumers.length > 1) {
+
+            newVisit = await Visit.create({ ...newDate });
+
+            for (idxCustomer = 0; idxCustomer < oldVisit.custumers.length; idxCustomer++) {
+                if (oldVisit.custumers[idxCustomer].userId == user._id) {
+                    oldVisit.custumers.splice(idxCustomer, 1);
+
+                    break;
+                }
+            }
+
+            await oldVisit.save();
+
+            return res.json(newVisit);
+        }
+
         oldVisit.day       = newDate.day;
         oldVisit.month     = newDate.month;
         oldVisit.year      = newDate.year;
